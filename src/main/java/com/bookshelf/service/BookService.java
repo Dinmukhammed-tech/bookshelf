@@ -3,9 +3,6 @@ package com.bookshelf.service;
 import com.bookshelf.entity.Book;
 import com.bookshelf.exception.ResourceNotFoundException;
 import com.bookshelf.repository.BookRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +28,13 @@ public class BookService {
 
     public Book createBook(Book book){
         return bookRepository.save(book);
+    }
+
+    public void deleteBook(Long id){
+        if(!bookRepository.existsById(id)){
+            throw new ResourceNotFoundException("Book not found:"+id);
+        }
+        bookRepository.deleteById(id);
     }
 
 }

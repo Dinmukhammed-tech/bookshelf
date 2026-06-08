@@ -4,6 +4,7 @@ import com.bookshelf.entity.Book;
 import com.bookshelf.service.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,12 @@ public class BookController {
     @PostMapping
     public Book create(@Valid @RequestBody Book book){
         return bookService.createBook(book);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void delete(@PathVariable Long id){
+        bookService.deleteBook(id);
     }
 
 }

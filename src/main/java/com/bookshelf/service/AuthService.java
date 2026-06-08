@@ -3,6 +3,7 @@ package com.bookshelf.service;
 import com.bookshelf.dto.AuthResponse;
 import com.bookshelf.dto.LoginRequest;
 import com.bookshelf.dto.RegisterRequest;
+import com.bookshelf.entity.Role;
 import com.bookshelf.entity.User;
 import com.bookshelf.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class AuthService {
         user.setUsername(request.username());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(Role.USER);
 
         return userRepository.save(user);
     }
