@@ -3,6 +3,7 @@ package com.bookshelf.controller;
 import com.bookshelf.dto.AuthResponse;
 import com.bookshelf.dto.LoginRequest;
 import com.bookshelf.dto.RegisterRequest;
+import com.bookshelf.dto.UserResponse;
 import com.bookshelf.entity.User;
 import com.bookshelf.service.AuthService;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public User register(@Valid @RequestBody RegisterRequest registerRequest){
+    public UserResponse register(@Valid @RequestBody RegisterRequest registerRequest){
         return authService.register(registerRequest);
     }
 
