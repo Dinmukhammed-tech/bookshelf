@@ -7,9 +7,13 @@ public record BookResponse(
         String title,
         String author,
         String description,
-        String genre
+        String genre,
+        Double averageRating
 ) {
     public static BookResponse from(Book book){
-        return new BookResponse(book.getId(), book.getTitle(), book.getAuthor(), book.getDescription(), book.getGenre());
+        return new BookResponse(book.getId(), book.getTitle(), book.getAuthor(), book.getDescription(), book.getGenre(), null);
+    }
+    public static BookResponse from(Book book, Double averageRating){
+        return new BookResponse(book.getId(), book.getTitle(), book.getAuthor(), book.getDescription(), book.getGenre(), averageRating);
     }
 }

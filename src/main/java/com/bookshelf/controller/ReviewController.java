@@ -6,22 +6,25 @@ import com.bookshelf.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.net.Authenticator;
+import java.util.List;
 
-@Controller
+
+@RestController
 @AllArgsConstructor
-@RequestMapping("api/v1/books")
+@RequestMapping("api/v1/review")
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @PostMapping("create_review")
+    @PostMapping
     public ReviewResponse createReview(@Valid @RequestBody ReviewRequest reviewRequest, Authentication authentication){
         String name = authentication.getName();
         return reviewService.createReview(reviewRequest,name);
+    }
+
+    @GetMapping
+    public List<ReviewResponse> getByBook(@RequestParam Long bookId){
+        return reviewService.getReviewByBookId(bookId);
     }
 }

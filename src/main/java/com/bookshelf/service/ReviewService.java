@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.net.Authenticator;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -36,5 +37,11 @@ public class ReviewService {
 
         Review saved = reviewRepository.save(review);
         return ReviewResponse.from(saved);
+    }
+
+    public List<ReviewResponse> getReviewByBookId(Long bookId){
+        return reviewRepository.findByBookId(bookId).stream()
+                .map(ReviewResponse :: from)
+                .toList();
     }
 }

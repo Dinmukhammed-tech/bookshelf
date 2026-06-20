@@ -4,20 +4,21 @@ import com.bookshelf.dto.BookResponse;
 import com.bookshelf.entity.Book;
 import com.bookshelf.exception.ResourceNotFoundException;
 import com.bookshelf.repository.BookRepository;
+import com.bookshelf.repository.ReviewRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BookService {
 
 
     private final BookRepository bookRepository;
+    private final ReviewRepository reviewRepository;
 
-    public BookService(BookRepository bookRepository){
-        this.bookRepository = bookRepository;
-    }
 
     public List<BookResponse> getAllBooks(){
         List<Book> list = bookRepository.findAll();
@@ -33,8 +34,11 @@ public class BookService {
     public BookResponse getBookById(Long id){
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found:"+id));
-        return BookResponse.from(book);
+        Double avg = reviewRepository.findAverageRatingByBookId(id);
+        return BookResponse.from(book,avg);
     }
+
+
 
     public BookResponse createBook(Book book){
 
