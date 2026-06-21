@@ -5,7 +5,9 @@ import com.bookshelf.entity.Book;
 import com.bookshelf.exception.ResourceNotFoundException;
 import com.bookshelf.repository.BookRepository;
 import com.bookshelf.repository.ReviewRepository;
+import com.bookshelf.spec.BookSpecifications;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,6 +53,17 @@ public class BookService {
             throw new ResourceNotFoundException("Book not found:"+id);
         }
         bookRepository.deleteById(id);
+    }
+
+    public List<BookResponse> searchBooks(String genre, String author, String title){
+        Specification<Book> spec = Specification.allOf(
+                BookSpecifications.hasGenre(genre),
+                BookSpecifications.hasAuthor(author),
+                BookSpecifications.titleContains(title)
+        );
+        return bookRepository.findAll(spec).stream()
+                .map(BookResponse :: from)
+                .toList();
     }
 
 }
