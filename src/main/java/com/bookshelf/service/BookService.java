@@ -3,12 +3,17 @@ package com.bookshelf.service;
 import com.bookshelf.dto.BookResponse;
 import com.bookshelf.entity.Book;
 import com.bookshelf.exception.ResourceNotFoundException;
+import com.bookshelf.mapper.BookMapper;
 import com.bookshelf.repository.BookRepository;
 import com.bookshelf.repository.ReviewRepository;
 import com.bookshelf.spec.BookSpecifications;
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,24 +25,21 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final ReviewRepository reviewRepository;
+    private final BookMapper bookMapper;
 
 
-    public List<BookResponse> getAllBooks(){
-        List<Book> list = bookRepository.findAll();
-//        List<BookResponse> res = new ArrayList<>();
-//        for (Book book : list){
-//            res.add(BookResponse.from(book));
-//        }
-        return list.stream()
-                .map(BookResponse :: from)
-                .toList();
+    
+
+    public Page<BookResponse> getAllBooks(Pageable pageable){
+        return bookRepository.findAll(pageable).map(bookMapper :: toResponse);
     }
 
     public BookResponse getBookById(Long id){
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found:"+id));
         Double avg = reviewRepository.findAverageRatingByBookId(id);
-        return BookResponse.from(book,avg);
+        BookResponse base = bookMapper.toResponse(book);
+        return base.withAverageRating(avg);
     }
 
 
@@ -45,7 +47,7 @@ public class BookService {
     public BookResponse createBook(Book book){
 
         Book saved = bookRepository.save(book);
-        return BookResponse.from(saved);
+        return bookMapper.toResponse(saved);
     }
 
     public void deleteBook(Long id){
@@ -62,7 +64,7 @@ public class BookService {
                 BookSpecifications.titleContains(title)
         );
         return bookRepository.findAll(spec).stream()
-                .map(BookResponse :: from)
+                .map(bookMapper :: toResponse)
                 .toList();
     }
 

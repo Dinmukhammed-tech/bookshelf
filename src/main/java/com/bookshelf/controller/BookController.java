@@ -5,9 +5,11 @@ import com.bookshelf.entity.Book;
 import com.bookshelf.service.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -18,9 +20,11 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
+
+
     @GetMapping
-    public List<BookResponse> getAll() {
-        return bookService.getAllBooks();
+    public Page<BookResponse> getAllBooks(Pageable pageable){
+        return bookService.getAllBooks(pageable);
     }
 
     @GetMapping("/{id}")

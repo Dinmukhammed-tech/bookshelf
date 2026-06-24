@@ -16,4 +16,7 @@ public record BookResponse(
     public static BookResponse from(Book book, Double averageRating){
         return new BookResponse(book.getId(), book.getTitle(), book.getAuthor(), book.getDescription(), book.getGenre(), averageRating);
     }
+    public BookResponse withAverageRating(Double averageRating){
+        return new BookResponse(id, title, author, description, genre, averageRating);
+    }
 }
