@@ -5,6 +5,7 @@ import com.bookshelf.entity.Book;
 import com.bookshelf.service.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,6 +51,11 @@ public class BookController {
             @RequestParam(required = false) String title
     ){
         return bookService.searchBooks(genre, author, title);
+    }
+
+    @PutMapping("{id}")
+    public BookResponse update(@PathVariable Long id, @Valid @RequestBody Book book){
+        return bookService.updateBook(id, book);
     }
 
 }
